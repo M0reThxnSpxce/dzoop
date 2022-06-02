@@ -1,0 +1,77 @@
+class Student:
+    def __init__(self, name, surname):
+        self.name = name
+        self.surname = surname
+        self.finished_courses = []
+        self.courses_in_progress = []
+        self.grades = {}
+
+    def __str__(self):
+        print('Имя: ', self.name)
+        print('Фамилия: ', self.surname)
+        print('Средняя оценка за домашнее задание: ', list(self.grades.values()))
+        print('Курсы в процессе обучения: ', self.courses_in_progress)
+        print('Завершенные курсы: ', self.finished_courses)
+
+    def lecturer_grades(self, lecturer, course, grade):
+        if isinstance(lecturer,
+                      Lecturer) and course in self.courses_in_progress and course in lecturer.courses_fixed:
+            if course in lecturer.grades:
+                lecturer.grades[course] += [grade]
+            else:
+                lecturer.grades[course] = [grade]
+        else:
+            return 'Ошибка'
+
+class Mentor:
+    def __init__(self, name, surname):
+        self.name = name
+        self.surname = surname
+        self.courses_fixed = []
+
+class Lecturer(Mentor):
+    def __init__(self, name, surname):
+        super().__init__(name, surname)
+        self.grades = {}
+
+    def __str__(self):
+        print('Имя: ', self.name)
+        print('Фамилия: ', self.surname)
+        print('Средняя оценка за домашнее задание: ', list(self.grades.values()))
+        print(' ')
+
+class Reviewer(Mentor):
+    def __init__(self, name, surname):
+        super().__init__(name, surname)
+
+    def __str__(self):
+        print('Имя: ', self.name)
+        print('Фамилия: ', self.surname)
+        print(' ')
+
+    def rate_hw(self, student, course, grade):
+        if isinstance(student,
+                      Student) and course in self.courses_fixed and course in student.courses_in_progress:
+            if course in student.grades:
+                student.grades[course] += [grade]
+            else:
+                student.grades[course] = [grade]
+        else:
+            return 'Ошибка'
+
+some_lecturer = Lecturer('Elena', 'Sokolova')
+some_lecturer.courses_fixed += ['Python']
+
+some_student = Student('Gennady', 'Markovin')
+some_student.courses_in_progress += ['Python']
+some_student.courses_in_progress += ['Git']
+some_student.finished_courses += ['Введение в программирование']
+
+some_reviewer = Reviewer('Pavel', 'Antonov')
+some_reviewer.courses_fixed += ['Python']
+some_reviewer.rate_hw(some_student, 'Python', 10)
+some_reviewer.rate_hw(some_student, 'Python', 7)
+some_reviewer.rate_hw(some_student, 'Python', 6)
+some_student.lecturer_grades(some_lecturer, 'Python', 10)
+some_student.lecturer_grades(some_lecturer, 'Python', 7)
+some_student.lecturer_grades(some_lecturer, 'Python', 6)
